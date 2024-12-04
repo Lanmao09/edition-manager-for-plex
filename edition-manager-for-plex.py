@@ -36,7 +36,8 @@ logger.addHandler(handler)
 def initialize_settings():
     config_file = Path(__file__).parent / 'config' / 'config.ini'
     config = ConfigParser()
-    config.read(config_file)
+    # 指定使用 UTF-8 编码读取配置文件
+    config.read(config_file, encoding='utf-8')
     if 'server' in config.sections():
         server = config.get('server', 'address')
         token = config.get('server', 'token')
@@ -155,9 +156,27 @@ def update_movie(server, token, movie, tags, language):
     # 如果不存在 editionTitle，并且 tags 不为空，则更新版本信息并打印信息
     if not existing_edition and tags:
         movie_id = movie['ratingKey']
+        
+        # 获取电影详细信息来获取 library_id
+        headers = {'X-Plex-Token': token, 'Accept': 'application/json'}
+        response = requests.get(f'{server}/library/metadata/{movie_id}', headers=headers)
+        metadata = response.json()['MediaContainer']['Metadata'][0]
+        library_id = metadata['librarySectionID']
+        
         edition_title = ' · '.join(tags)
-        params = {'type': 1, 'id': movie_id, 'editionTitle.value': edition_title, 'editionTitle.locked': 1}
-        requests.put(f'{server}/library/metadata/{movie_id}', headers={'X-Plex-Token': token}, params=params)
+        
+        # 使用正确的 API 端点
+        params = {
+            'type': 1,
+            'id': movie_id,
+            'includeExternalMedia': 1,
+            'editionTitle.value': edition_title,
+            'editionTitle.locked': 1
+        }
+        
+        url = f'{server}/library/sections/{library_id}/all'
+        requests.put(url, headers={'X-Plex-Token': token}, params=params)
+        
         if language == 'zh':
             logger.info(f'{movie["title"]}：{edition_title}')
         else:
@@ -165,6 +184,7 @@ def update_movie(server, token, movie, tags, language):
         return True
     else:
         return False
+
 
 # 处理新增电影
 def process_new_movie(server, token, metadata, language, modules):
@@ -242,14 +262,28 @@ def process_new_movie(server, token, metadata, language, modules):
 
 # 重置电影的版本信息
 def reset_movie(server, token, movie, language):
-    # 通过 existing_edition 判断电影是否存在 editionTitle
     existing_edition = movie.get('editionTitle')
 
-    # 如果存在 editionTitle，则重置版本信息并打印信息
     if existing_edition:
         movie_id = movie['ratingKey']
-        params = {'type': 1, 'id': movie_id, 'editionTitle.value': '', 'editionTitle.locked': 0}
-        requests.put(f'{server}/library/metadata/{movie_id}', headers={'X-Plex-Token': token}, params=params)
+        
+        # 获取电影详细信息来获取 library_id
+        headers = {'X-Plex-Token': token, 'Accept': 'application/json'}
+        response = requests.get(f'{server}/library/metadata/{movie_id}', headers=headers)
+        metadata = response.json()['MediaContainer']['Metadata'][0]
+        library_id = metadata['librarySectionID']
+        
+        params = {
+            'type': 1,
+            'id': movie_id,
+            'includeExternalMedia': 1,
+            'editionTitle.value': '',
+            'editionTitle.locked': 0
+        }
+        
+        url = f'{server}/library/sections/{library_id}/all'
+        requests.put(url, headers={'X-Plex-Token': token}, params=params)
+        
         if language == 'zh':
             logger.info(f'已重置{movie["title"]}')
         else:
@@ -257,6 +291,7 @@ def reset_movie(server, token, movie, language):
         return True
     else:
         return False
+
 
 # 重置所有电影的版本信息
 def reset_movies(server, token, skip_libraries, language):
