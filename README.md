@@ -248,7 +248,7 @@ EMP 共有 `为所有电影添加版本信息（all）`、`为新增电影添加
 注：`为新增电影添加版本信息` 模式需要服务器的管理员账号订阅了 Plex Pass 才能使用。
 
 ## 配置说明
-在使用 EMP 前，请先参考以下提示（示例）对 `/config/config.ini` 进行配置。
+运行前，请先参考以下提示（示例）对 `/config/config.ini` 进行配置。
 ```
 [server]
 # Plex 服务器的地址，格式为 http://服务器 IP 地址:32400 或 http(s)://域名:端口号
@@ -264,7 +264,7 @@ language = zh
 # 指定需要写入的模块及其排序，格式为模块1；模块2；模块3，可选模块包括剪辑版本、发行版本、片源版本、分辨率、动态范围、视频编码、帧率、音频编码、比特率、大小、国家、内容分级、评分、时长
 order = 片源版本；动态范围
 ```
-由于 EMP 只会对电影类型的资料库进行处理，所以在指定需要跳过的资料库时，指定需要跳过的电影类型的资料库即可。写入版本信息的模块没有数量限制，可以根据需要自行选配。
+由于 EMP 只会对电影和其他影片类型的资料库进行处理，所以在指定需要跳过的资料库时，指定需要跳过的电影和其他影片类型的资料库即可。写入版本信息的模块没有数量限制，可以根据需要自行选配。
 
 在 `为新增电影添加版本信息` 模式下运行时，EMP 会使用 Flask 创建一个 Web 服务器，通过监听 `8089` 端口来接收 Plex 服务器发送的 `library.new` 事件，从而获取新增项目的信息并对其进行处理。
 
@@ -440,13 +440,13 @@ PC 用户也可以通过提供的快速启动脚本来执行任务：
 - 请使用服务器管理员账号的 X-Plex-Token，以确保你拥有足够的权限进行操作。
 - 版本信息将在添加后被锁定，若有修改需求，Plex Pass 订阅用户可以手动解锁版本信息，然后进行修改；非 Plex Pass 订阅用户不支持手动修改版本信息。若要为所有电影修改版本信息的模块或排序，请先重置版本信息，然后修改配置文件，再重新写入版本信息。
 - 修改配置文件后，需要重启容器，新的配置信息才会生效。
-- Windows 用户运行 Python 脚本后，若没有任何反应，请将运行命令或启动脚本中的 `python3` 替换为 `python` 再运行。
+- 若脚本在 Windows 上运行后没有反应，请将运行命令或启动脚本中的 `python3` 替换为 `python` 再运行。
 - 如需使用 `为新增电影添加版本信息` 模式，请确保你在服务器的 `设置 - 网络` 中勾选了 `Webhooks` 选项。
 
 ## 赞赏
-如果你觉得这个项目对你有用，可以请我喝杯咖啡。如果你喜欢这个项目，可以给我一个⭐️。谢谢你的支持！
+如果你觉得这个项目对你有用，可以考虑请我喝杯咖啡或者给我一个⭐️。谢谢你的支持！
 
-<img width="399" alt="赞赏" src="https://github.com/x1ao4/edition-manager-for-plex/assets/112841659/b9e79a88-f2af-4c3a-8278-479454c6393a">
+<img width="383" alt="赞赏" src="https://github.com/user-attachments/assets/bdd2226b-6282-439d-be92-5311b6e9d29c">
 <br><br>
 <a href="#edition-manager-for-plex-zh">回到顶部</a>
 <br>
@@ -466,7 +466,7 @@ The Edition is displayed below the title, after the year, and also in the "More 
 
 For instance, currently, Plex's mobile and TV apps do not display Dolby Vision information. We can achieve this by writing the dynamic range into the Edition, allowing Dolby Vision information to be displayed on mobile and TV apps. This way, we can distinguish which movies are Dolby Vision versions. Additionally, Plex's library sorting currently only supports single sorting criteria. You cannot display the movie's resolution or bitrate information while sorting by title or audience rating. Similarly, we can display this extra information through Edition.
 
-Using Edition Manager for Plex (hereinafter referred to as EMP), you can automatically retrieve information about movies and movie files and write the specified information into the Edition field, enriching the display functionality of movie information. With EMP, you can write the movie's Cut Version, Release Version, Source Version, Resolution, Dynamic Range, Video Codec, Frame Rate, Audio Codec, Bitrate, Size, Country, Content Rating, Audience Rating, or Duration into the Edition field. It also supports custom modules and custom sorting. 
+Using Edition Manager for Plex (hereafter referred to as EMP), you can automatically retrieve information about movies and movie files and write the specified information into the Edition field, enriching the display functionality of movie information. With EMP, you can write the movie's Cut Version, Release Version, Source Version, Resolution, Dynamic Range, Video Codec, Frame Rate, Audio Codec, Bitrate, Size, Country, Content Rating, Audience Rating, or Duration into the Edition field. It also supports custom modules and custom sorting. 
 
 All of this will be automatically handled by EMP, without the need to edit or modify filenames. This means you don't need to add Edition information to the filename in the format `{edition-Edition Title}`. EMP will automatically search for relevant information through filenames or the movie's metadata, and then write the required details into the Edition field. There are no specific requirements for naming files.
 
@@ -704,7 +704,7 @@ The EMP operates in three modes: `add editions for all movies (all)`, `add editi
 Note: The `add editions for new movies` mode requires the server administrator account to be subscribed to Plex Pass in order to use.
 
 ## Configuration
-Before using EMP, please configure the `/config/config.ini` file according to the following tips (example).
+Before running, please configure the `/config/config.ini` file according to the following tips (example).
 ```
 [server]
 # Address of the Plex server, formatted as http://server IP address:32400 or http(s)://domain:port
@@ -720,7 +720,7 @@ language = en
 # Specify modules to write and their order, format should be Module1;Module2;Module3, optional modules include Cut, Release, Source, Resolution, DynamicRange, VideoCodec, FrameRate, AudioCodec, Bitrate, Size, Country, ContentRating, Rating, Duration
 order = Source;DynamicRange
 ```
-Since EMP only processes libraries of movie type, specify libraries of movie type to skip when needed. There is no limit to the number of modules for writing editions, so you can choose and configure them according to your needs.
+Since EMP only processes movie-type libraries, specify Movies and Other Videos libraries to skip when needed. There is no limit to the number of modules for writing editions, so you can choose and configure them according to your needs.
 
 When running in `add editions for new movies` mode, EMP creates a Flask web server that listens on port `8089` to receive `library.new` events sent by the Plex server. This allows it to capture metadata for newly added items and process them accordingly.
 
@@ -806,7 +806,7 @@ You can run EMP using Docker containers or Python scripts. Docker containerizati
    networks: {}
    ```
 
-#### Usage
+#### How to Use
 With EMP, you can write edition information as well as remove it. Since Docker automatically starts all containers within the stack upon stack initialization, the functions for writing and removing need to be deployed separately. First, deploy `edition-manager-for-plex` to write edition information, then deploy `edition-manager-for-plex-reset` when needed to remove edition information (upon deployment, it will immediately execute a `reset editions for all movies` once. You can also use `docker-compose up --no-start` to deploy this container, which will not run immediately after deployment; start the container only when needed).
 
 - edition-manager-for-plex
@@ -840,9 +840,9 @@ You can select and configure these four containers as needed. If certain functio
 
 #### Requirements
 - Python 3.0 or higher installed.
-- Necessary third-party libraries installed using the command `pip3 install -r requirements.txt`.
+- All required dependencies installed using `pip3 install -r requirements.txt`.
 
-#### Usage
+#### How to Use
 1. Download the latest release package from [Releases](https://github.com/x1ao4/edition-manager-for-plex/releases) and extract it to a local directory.
 2. Open the `/config/config.ini` file in the directory using a text editor, fill in your Plex server address (`address`) and [X-Plex-Token](https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/) (`token`), set the modules to write edition information and their order (`order`), and optionally fill in other configuration options as needed.
 3. In the Plex server settings, navigate to `Webhooks`, click on `Add Webhook`, and enter your Flask server address `http://IP address of the device running the script:8089` and `Save Changes`. (Non-Plex Pass subscribers do not need to fill this.)
@@ -896,12 +896,12 @@ If the scripts fail to run as scheduled or on startup, you may need to replace `
 - Please use the X-Plex-Token of the server administrator account to ensure you have sufficient permissions to perform operations.
 - The edition field will be locked after being added. If modifications are needed, Plex Pass subscribers can manually unlock the edition field and then modify it; non-Plex Pass subscribers do not support manual modification of the edition field. To modify the edition modules or their order for all movies, first reset the editions, then modify the configuration file, and finally rewrite the editions.
 - After modifying the configuration file, you need to restart the container for the new configuration to take effect.
-- If Windows users see no response after running the Python script, try replacing `python3` with `python` in the run command or start script.
+- If it doesn't respond on Windows, try replacing `python3` with `python` in the run command or start script.
 - To use the `add editions for new movies` mode, please ensure you have checked the `Webhooks` option in the server's `Settings - Network` section.
 
 ## Support
 If you found this helpful, consider buying me a coffee or giving it a ⭐️. Thanks for your support!
 
-<img width="399" alt="Support" src="https://github.com/x1ao4/edition-manager-for-plex/assets/112841659/b9e79a88-f2af-4c3a-8278-479454c6393a">
+<img width="383" alt="Support" src="https://github.com/user-attachments/assets/bdd2226b-6282-439d-be92-5311b6e9d29c">
 <br><br>
 <a href="#edition-manager-for-plex-en">Back to Top</a>
